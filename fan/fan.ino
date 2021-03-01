@@ -2,7 +2,7 @@
 #define lightsensorPIN 2
 
 const long seconds = 1000;
-const long delay_on = seconds * 30; // задержка перед включением
+const long delay_on = seconds * 60; // задержка перед включением
 const long delay_off = seconds * 60*5; // задержка перед выключением
 
 

@@ -11,9 +11,9 @@ const long day = hour*24;
 boolean included = false;
 uint32_t myTimer = millis();
 long work = seconds * 30; // сколько работаем
-long pause = seconds * 30; // Сколько отдыхаем
+long pause = hour; // Сколько отдыхаем
 uint32_t tmp =  myTimer + pause; // первичная инициализация
-
+String txt;
 
 void setup() {
   Serial.begin(9600);
@@ -28,18 +28,22 @@ void setup() {
 void loop() {
   bool on = digitalRead(workPIN);
   bool buttonPressed = !digitalRead(buttonPIN);
-  uint32_t m = millis();
+  
+  if (tmp >= millis()) {
+    txt = "Сл. полив через " + format(tmp - millis());
+  }
 
-  if (m - myTimer >=  work && on)  { 
-    myTimer = m;
+  if (millis() - myTimer >=  work && on)  { 
+    myTimer = millis();
     tmp = myTimer + pause;
     
     digitalWrite(workPIN, LOW);
     digitalWrite(indicatorPIN, LOW);
-  } else if ((m - myTimer >=  pause && !on) || (buttonPressed && !on)) { 
-    myTimer = m;
+  } else if ((millis() - myTimer >=  pause && !on) || (buttonPressed && !on)) { 
+    myTimer = millis();
     tmp = 0;
-
+    txt = "Поливаем...";
+    
     digitalWrite(workPIN, HIGH);
     digitalWrite(indicatorPIN, HIGH);
   }
@@ -47,11 +51,8 @@ void loop() {
 
   // отладка
    delay(1000);
-   if (tmp > 0 && tmp > m) {
-    Serial.println(format(tmp - m)); 
-   }
+   Serial.println(txt); 
    
-
 }
 
 
@@ -60,5 +61,14 @@ String format(long i) {
   int m = ((i / 1000) % 3600) / 60;
   int s = (i / 1000) % 60;
 
-  return String(h, DEC) + ":" + String(m, DEC) + ":" + String(s, DEC);
+  return inttostr(h) + ":" + inttostr(m) + ":"+ inttostr(s); 
+}
+
+String inttostr(int i) {
+  String result;
+  
+   if (i < 10) result += "0";
+  result += String(i, DEC);
+
+  return result;
 }
