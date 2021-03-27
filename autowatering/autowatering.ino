@@ -1,8 +1,15 @@
 #include <avr/eeprom.h>
+#include <U8glib.h>
 
-#define workPIN 8
+// шрифты
+#include "rus9x18.h" 
+#include "rus8x13.h"
+
+#define workPIN 4
 #define buttonPIN 2
 #define indicatorPIN 13
+
+U8GLIB_SSD1306_128X32 u8g(U8G_I2C_OPT_NONE);  // I2C / TWI
 
 const long seconds = 1000;
 const long minute = seconds * 60;
@@ -18,7 +25,7 @@ long pause = day * 3; // Сколько отдыхаем
 uint32_t tmp =  myTimer + pause; // первичная инициализация
 String txt;
 bool previousState = false; // для определения нажатия и удержания кнопки
-
+int startpos = 5;
 
 void setup() {
   Serial.begin(9600);
@@ -28,7 +35,6 @@ void setup() {
   pinMode(buttonPIN, INPUT_PULLUP);
 
   digitalWrite(workPIN, LOW);
-
 
   long tmp = eeprom_read_dword(0); // читаем из энергонезависимой памяти
   if (tmp > 0) {
@@ -49,7 +55,7 @@ void loop() {
   // если кнопку держим определенное время то отсчитываем время полива
   if (buttonTimer > 0 && millis() - buttonTimer >= timeout) {
     Serial.println("Установка времени полива");
-    
+
     myTimer = millis(); // меняем что бы таймер не закончился, полив прервется через forcebreak
     forcebreak = buttonPressed != previousState && !buttonPressed; // пренудительно останавливаем полив когда кнопку отпустили
     if (forcebreak) {
@@ -65,7 +71,7 @@ void loop() {
 
 
   if (tmp >= millis()) {
-    txt = "Сл. полив через " + format(tmp - millis()) + " (полив " + work / seconds + " сек.)";
+    txt = "Сл. полив через " + format(tmp - millis());
   }
 
   if (millis() - myTimer >= work && on || forcebreak)  {
@@ -84,14 +90,31 @@ void loop() {
     digitalWrite(indicatorPIN, HIGH);
   }
 
-
   previousState = !digitalRead(buttonPIN);
 
-  // отладка
+
+  // Отрисовка дисплея
+  u8g.firstPage();
+  int displaylength = 50;
+  do
+  {
+    u8g.setColorIndex(1);    // цвет белый
+    u8g.setFont(rus9x18);
+    u8g.setPrintPos(startpos, 15);
+    u8g.print(txt);
+
+    u8g.setFont(rus8x13);
+    u8g.setPrintPos(5, 30);
+    u8g.print("полив " + String(work / seconds , DEC) + " сек");
+
+  } while ( u8g.nextPage() );
+
+  startpos -= 10;
+  if (startpos < -150) {
+    startpos = 5;
+  }
+  //Serial.println(startpos);
   delay(500);
-  Serial.println(txt);
-
-
 }
 
 
