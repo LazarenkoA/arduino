@@ -1,6 +1,8 @@
 #include <iarduino_NeoPixel.h>  //  Подключаем библиотеку iarduino_NeoPixel для работы со светодиодами NeoPixel
 #include <iarduino_RTC.h>
 
+//#include <LiquidCrystal_I2C.h>
+
 #define LED_PIN 4
 #define LED_count 74
 #define lightsensorPIN 9
@@ -9,6 +11,8 @@
 
 iarduino_NeoPixel led(LED_PIN, LED_count);  //  Объявляем объект LED указывая (№ вывода Arduino к которому подключены светодиоды NeoPixel, количество используемых светодиодов)
 iarduino_RTC watch(RTC_DS3231);  // для модуля часов
+
+//LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 class sunriseSunset {
   public:
@@ -24,13 +28,29 @@ sunriseSunset::sunriseSunset(byte sunrise, byte sunset) {
 
 
 const long colors[7] = {
-  0xff3200, // фиолетовый
+  0x8b8b00, // фиолетовый
   0xFF0000, // красный
   0xde0021,
-  0xff00ff,
-  0x3000cf,
+  0xff00c8,
+  0x0000ff,
   0X00ff88,
   0X00ff00 // синий
+};
+
+// массив данных восхода - заката
+sunriseSunset obj[12] {
+  sunriseSunset(9, 16), // январь
+  sunriseSunset(8, 17),
+  sunriseSunset(6, 19),
+  sunriseSunset(6, 19),
+  sunriseSunset(5, 20),
+  sunriseSunset(5, 21),
+  sunriseSunset(5, 22),
+  sunriseSunset(5, 21),
+  sunriseSunset(5, 20),
+  sunriseSunset(6, 19),
+  sunriseSunset(6, 18),
+  sunriseSunset(7, 16)
 };
 
 const char*  holidays[2] {
@@ -50,13 +70,20 @@ void setup() {
   led.begin(); // Инициируем работу с лентой
   watch.begin();  // Инициируем работу с модулем времени
 
+  // initialize the LCD
+  //lcd.begin();
+
   pinMode(lightsensorPIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
 
-  //Serial.println(watch.gettime("d-m-Y, H:i:s, D"));
+Serial.println("---------------------------");
+  //  lcd.setCursor(0, 0);
+  //  lcd.print(watch.gettime("d-m-Y,H:i:s"));
+  Serial.println(watch.gettime("d-m-Y,H:i:s"));
+
 
   // Если в Serial послали resettime, тогда устанавливаем время
   String str = Serial.readString();
@@ -69,10 +96,13 @@ void loop() {
   }
 
   //if (!digitalRead(lightsensorPIN)) {
+
+  Serial.println(enable());
   if (!enable()) {
     led.setColor(NeoPixelAll, 0x000000);
     led.write();
     delay(500);
+    Serial.println("return");
     return;
   }
 
@@ -97,25 +127,14 @@ bool isHoliday() {
 
 
 bool enable() {
-  // массив данных восхода - заката
-  sunriseSunset obj[12] {
-    sunriseSunset(8, 17),
-    sunriseSunset(7, 18),
-    sunriseSunset(6, 19),
-    sunriseSunset(6, 20),
-    sunriseSunset(5, 20),
-    sunriseSunset(5, 21),
-    sunriseSunset(5, 22),
-    sunriseSunset(5, 21),
-    sunriseSunset(5, 20),
-    sunriseSunset(6, 20),
-    sunriseSunset(6, 19),
-    sunriseSunset(7, 18)
-  };
+  //  watch.gettime();
+  //  lcd.setCursor(0, 1);
+  //  lcd.print(!(watch.Hours >= obj[watch.month - 1]._sunrise and watch.Hours <= obj[watch.month - 1]._sunset));
+  //  lcd.setCursor(1, 1);
+  //  lcd.print(" "+String(obj[watch.month - 1]._sunrise, DEC) +"/"+ String(obj[watch.month - 1]._sunset, DEC)+"/"+String(watch.Hours, DEC));
 
-
-  watch.gettime();
-  return !(watch.Hours >= obj[watch.month-1]._sunrise and watch.Hours <= obj[watch.month-1]._sunset);
+  Serial.println(String(obj[watch.month - 1]._sunrise, DEC) + "/" + String(obj[watch.month - 1]._sunset, DEC) + "/" + String(watch.Hours, DEC));
+  return !(watch.Hours > obj[watch.month - 1]._sunrise and watch.Hours < obj[watch.month - 1]._sunset);
 }
 
 

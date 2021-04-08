@@ -14,34 +14,48 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
 
   led.begin(); // Инициируем работу с лентой
+
+  delay(100);
+  led.setColor(NeoPixelAll, 0x66ff00, 50); // яркость успавляется переменным резистором
+  led.write();
+  
 }
 
 void rgb (int red, int green, int blue) {
-  led.setColor(NeoPixelAll, red, green, blue); // яркость успавляется переменным резистором
-  Serial.println("R:"+ String(red, DEC) + " G:"+ String(green, DEC) + " B:" + String(blue, DEC));
+  led.setColor(NeoPixelAll, red, blue, green, 50); // яркость успавляется переменным резистором
+  Serial.println("R:" + String(red, DEC) + " G:" + String(green, DEC) + " B:" + String(blue, DEC));
   led.write();
 }
 
 void loop() {
-
-  // put your main code here, to run repeatedly:
-  val = analogRead(A5);
-  newVal = map(val, 0, 1023, 0, 1530);
-
-  if (newVal <= 255) { //красный
-    rgb(newVal, 0, 0);
-  } else if ((newVal > 255) && (newVal <= 510)) { //оранжевый и желтый
-    rgb(255, newVal - 255, 0);
-  } else if ((newVal > 510) && (newVal <= 765)) { //зеленый
-    rgb(765 - newVal, 255, 0);
-  } else if ((newVal > 765) && (newVal <= 1020)) { //голубой
-    rgb(0, 255, newVal - 765);
-  } else if ((newVal > 1020) && (newVal <= 1275)) { //синий
-    rgb(0, 1275 - newVal, 255);
-  } else if ((newVal > 1275) && (newVal <= 1530)) { //фиолетовый
-    rgb(newVal - 1275, 0, 255);
-  }
-
-
-  delay (100);
+  //
+  //  //  // put your main code here, to run repeatedly:
+  //  //  val = analogRead(A5);
+  //  //  if (val == 0) {
+  //  //    return;
+  //  //  }
+  //
+  //  Serial.println(newVal);
+  //  //newVal = map(val, 0, 1023, 0, 1530);
+  //
+  //  if (newVal <= 255) { //красный
+  //    rgb(newVal, 0, 0);
+  //  } else if ((newVal > 255) && (newVal <= 510)) { //оранжевый и желтый
+  //    rgb(255, newVal - 255, 0);
+  //  } else if ((newVal > 510) && (newVal <= 765)) { //зеленый
+  //    rgb(765 - newVal, 255, 0);
+  //  } else if ((newVal > 765) && (newVal <= 1020)) { //голубой
+  //    rgb(0, 255, newVal - 765);
+  //  } else if ((newVal > 1020) && (newVal <= 1275)) { //синий
+  //    rgb(0, 1275 - newVal, 255);
+  //  } else if ((newVal > 1275) && (newVal <= 1530)) { //фиолетовый
+  //    rgb(newVal - 1275, 0, 255);
+  //  }
+  //
+  //  if (newVal > 1530) {
+  //    newVal = 0;
+  //  }
+  //  newVal += 50;
+  //
+  //  delay (1000);
 }
