@@ -53,10 +53,11 @@ sunriseSunset obj[12] {
   sunriseSunset(7, 16)
 };
 
-const char*  holidays[2] {
+const char*  holidays[4] {
   "2908", // 29.08 = 2908
-  "3112"  // 31.12 = 3112
-  "0101"  // 01.01
+  "0409",
+  "3112",  // 31.12 = 3112
+  "0101",  // 01.01
 };
 
 uint8_t j;                                     //  Объявляем переменную для хранения значения сдвига спектра цветов для всех светодиодов (от 0 до 255)
@@ -78,13 +79,6 @@ void setup() {
 }
 
 void loop() {
-
-Serial.println("---------------------------");
-  //  lcd.setCursor(0, 0);
-  //  lcd.print(watch.gettime("d-m-Y,H:i:s"));
-  Serial.println(watch.gettime("d-m-Y,H:i:s"));
-
-
   // Если в Serial послали resettime, тогда устанавливаем время
   String str = Serial.readString();
   str.trim();
@@ -93,16 +87,13 @@ Serial.println("---------------------------");
     setsystime();
     Serial.print("Время установлено ");
     Serial.println(watch.gettime("d-m-Y, H:i:s, D"));
-  }
-
-  //if (!digitalRead(lightsensorPIN)) {
+  } 
 
   Serial.println(enable());
   if (!enable()) {
     led.setColor(NeoPixelAll, 0x000000);
     led.write();
-    delay(500);
-    Serial.println("return");
+    delay(500);  
     return;
   }
 
@@ -118,7 +109,7 @@ Serial.println("---------------------------");
 
 bool isHoliday() {
   for (int i = 0; i <= sizeof(holidays) / sizeof(int) - 1; i++) {
-    if (watch.gettime("dm") == holidays[i]) {
+    if (String(watch.gettime("dm")) == String(holidays[i])) {
       return true;
     }
   }
@@ -127,13 +118,13 @@ bool isHoliday() {
 
 
 bool enable() {
-  //  watch.gettime();
+    watch.gettime();
   //  lcd.setCursor(0, 1);
   //  lcd.print(!(watch.Hours >= obj[watch.month - 1]._sunrise and watch.Hours <= obj[watch.month - 1]._sunset));
   //  lcd.setCursor(1, 1);
   //  lcd.print(" "+String(obj[watch.month - 1]._sunrise, DEC) +"/"+ String(obj[watch.month - 1]._sunset, DEC)+"/"+String(watch.Hours, DEC));
 
-  Serial.println(String(obj[watch.month - 1]._sunrise, DEC) + "/" + String(obj[watch.month - 1]._sunset, DEC) + "/" + String(watch.Hours, DEC));
+  Serial.println("Восход = " + String(obj[watch.month - 1]._sunrise, DEC) + "; закат = " + String(obj[watch.month - 1]._sunset, DEC) + "; тек. часов = " + String(watch.Hours, DEC));
   return !(watch.Hours > obj[watch.month - 1]._sunrise and watch.Hours < obj[watch.month - 1]._sunset);
 }
 
