@@ -21,7 +21,7 @@ boolean included = false;
 uint32_t myTimer = millis();
 uint32_t buttonTimer;
 long work = seconds * 10; // сколько работаем (по дефолту, можно изменить удержанием кнопки)
-long pause = day * 3; // Сколько отдыхаем
+long pause = day * 5; // Сколько отдыхаем
 uint32_t tmp =  myTimer + pause; // первичная инициализация
 String txt;
 bool previousState = false; // для определения нажатия и удержания кнопки

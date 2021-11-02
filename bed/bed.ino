@@ -48,8 +48,8 @@ sunriseSunset obj[12] {
   sunriseSunset(5, 22),
   sunriseSunset(5, 21),
   sunriseSunset(5, 20),
-  sunriseSunset(6, 19),
   sunriseSunset(6, 18),
+  sunriseSunset(6, 17),
   sunriseSunset(7, 16)
 };
 
