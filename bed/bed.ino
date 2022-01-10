@@ -41,16 +41,16 @@ const long colors[7] = {
 sunriseSunset obj[12] {
   sunriseSunset(9, 16), // январь
   sunriseSunset(8, 17),
-  sunriseSunset(6, 19),
-  sunriseSunset(6, 19),
-  sunriseSunset(5, 20),
-  sunriseSunset(5, 21),
+  sunriseSunset(8, 19),
+  sunriseSunset(7, 19),
+  sunriseSunset(6, 20),
+  sunriseSunset(6, 21),
   sunriseSunset(5, 22),
   sunriseSunset(5, 21),
-  sunriseSunset(5, 20),
-  sunriseSunset(6, 18),
-  sunriseSunset(6, 17),
-  sunriseSunset(7, 16)
+  sunriseSunset(6, 20),
+  sunriseSunset(7, 18),
+  sunriseSunset(8, 17),
+  sunriseSunset(8, 16)
 };
 
 const char*  holidays[4] {

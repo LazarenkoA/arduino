@@ -20,7 +20,7 @@ void loop() {
   // если включили свет начинаем отсчет времени, потом вкллючаем вентилятор
   if (light && !on) {
     delay(delay_on);
-    digitalWrite(workPIN, !digitalRead(lightsensorPIN)); // к этому моменту усет уже может быть выключен, по этому читаем еще раз
+    digitalWrite(workPIN, !digitalRead(lightsensorPIN)); // к этому моменту свет уже может быть выключен, по этому читаем еще раз
   } else if (!light && on) {
     delay(delay_off);
     digitalWrite(workPIN, !digitalRead(lightsensorPIN));

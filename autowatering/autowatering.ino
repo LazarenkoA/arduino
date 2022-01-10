@@ -15,13 +15,13 @@ const long seconds = 1000;
 const long minute = seconds * 60;
 const long hour = minute * 60;
 const long day = hour * 24;
-const long timeout = seconds * 5; // таймаут того сколько нужно держать кнопку что бы задать время полива
+const long timeout = seconds * 4; // таймаут того сколько нужно держать кнопку что бы задать время полива
 
 boolean included = false;
 uint32_t myTimer = millis();
 uint32_t buttonTimer;
 long work = seconds * 10; // сколько работаем (по дефолту, можно изменить удержанием кнопки)
-long pause = day * 5; // Сколько отдыхаем
+long pause = day * 4; // Сколько отдыхаем
 uint32_t tmp =  myTimer + pause; // первичная инициализация
 String txt;
 bool previousState = false; // для определения нажатия и удержания кнопки
@@ -31,6 +31,7 @@ void setup() {
   Serial.begin(9600);
 
   pinMode(workPIN, OUTPUT);
+  pinMode(workPIN, INPUT);
   pinMode(indicatorPIN, OUTPUT);
   pinMode(buttonPIN, INPUT_PULLUP);
 
